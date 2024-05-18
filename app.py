@@ -1,5 +1,5 @@
 # Import necessary libraries
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 import pyotp
 from two_factor_auth import TwoFactorAuth
 
@@ -14,20 +14,30 @@ tfa = TwoFactorAuth()
 def index():
     return render_template("index.html")
 
-@app.route("/generate_qr_code", methods=["POST"])
-def generate_qr_code():
-    # Get account name from request data
-    data = request.get_json()
-    account_name = data.get("account_name", "")
+@app.route("/login", methods=["POST"])
+def login():
+    # Get username and password from form
+    username = request.form.get("username")
+    password = request.form.get("password")
 
+    # Here you would validate the username and password with your database
+    # For simplicity, let's assume the user is valid and redirect to 2FA setup
+
+    # Check if the user is logging in for the first time and enable 2FA
+    # For demonstration, let's assume it's the first login and redirect to 2FA setup
+
+    return redirect(url_for('setup_2fa', account_name=username))
+
+@app.route("/setup_2fa/<account_name>")
+def setup_2fa(account_name):
     # Generate a random secret key
     secret_key = pyotp.random_base32()
 
     # Generate QR code URL using TwoFactorAuth
     qr_code_url = tfa.generate_qr_code(account_name, secret_key)
 
-    # Return QR code URL and secret key as JSON response
-    return jsonify({"qr_code_url": qr_code_url, "secret_key": secret_key})
+    # Render a template to show the QR code to the user
+    return render_template("setup_2fa.html", qr_code_url=qr_code_url, secret_key=secret_key)
 
 @app.route("/verify_otp", methods=["POST"])
 def verify_otp():
