@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login & Signup</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +16,7 @@
             margin: 0;
         }
 
-        .login-container {
+        .container {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
@@ -35,7 +35,8 @@
         }
 
         input[type="text"],
-        input[type="password"] {
+        input[type="password"],
+        input[type="email"] {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
@@ -52,24 +53,75 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         button:hover {
             background-color: #0056b3;
         }
+
+        .tab {
+            cursor: pointer;
+            padding: 10px;
+            margin: 0 5px;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .tab-active {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-active {
+            display: block;
+        }
     </style>
+    <script>
+        function showForm(formId) {
+            document.getElementById('login-form').classList.remove('form-active');
+            document.getElementById('signup-form').classList.remove('form-active');
+            document.getElementById(formId).classList.add('form-active');
+            
+            document.getElementById('login-tab').classList.remove('tab-active');
+            document.getElementById('signup-tab').classList.remove('tab-active');
+            document.getElementById(formId + '-tab').classList.add('tab-active');
+        }
+    </script>
 </head>
 
 <body>
-    <div class="login-container">
-        <h1>Login</h1>
-        <form action="/login" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Login</button>
-        </form>
+    <div class="container">
+        <div>
+            <span id="login-tab" class="tab tab-active" onclick="showForm('login-form')">Login</span>
+            <span id="signup-tab" class="tab" onclick="showForm('signup-form')">Signup</span>
+        </div>
+        <div id="login-form" class="form-container form-active">
+            <h1>Login</h1>
+            <form action="/login" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+        <div id="signup-form" class="form-container">
+            <h1>Signup</h1>
+            <form action="/signup" method="post">
+                <label for="new-username">Username:</label>
+                <input type="text" id="new-username" name="username" required>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+                <label for="new-password">Password:</label>
+                <input type="password" id="new-password" name="password" required>
+                <button type="submit">Signup</button>
+            </form>
+        </div>
     </div>
 </body>
 
