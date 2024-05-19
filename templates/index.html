@@ -86,7 +86,7 @@
             document.getElementById('login-form').classList.remove('form-active');
             document.getElementById('signup-form').classList.remove('form-active');
             document.getElementById(formId).classList.add('form-active');
-            
+
             document.getElementById('login-tab').classList.remove('tab-active');
             document.getElementById('signup-tab').classList.remove('tab-active');
             document.getElementById(formId + '-tab').classList.add('tab-active');
@@ -102,7 +102,7 @@
         </div>
         <div id="login-form" class="form-container form-active">
             <h1>Login</h1>
-            <form action="/login" method="post">
+            <form action="{{ url_for('login') }}" method="post">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
                 <label for="password">Password:</label>
@@ -112,7 +112,7 @@
         </div>
         <div id="signup-form" class="form-container">
             <h1>Signup</h1>
-            <form action="/signup" method="post">
+            <form action="{{ url_for('signup') }}" method="post">
                 <label for="new-username">Username:</label>
                 <input type="text" id="new-username" name="username" required>
                 <label for="email">Email:</label>
