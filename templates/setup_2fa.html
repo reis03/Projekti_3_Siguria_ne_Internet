@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup 2FA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        img {
+            margin-top: 20px;
+            max-width: 300px;
+        }
+
+        .secret-key {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .redirect-link {
+            display: block;
+            margin-top: 20px;
+            color: blue;
+        }
+
+        .redirect-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Setup Two-Factor Authentication</h1>
+        <p>Scan this QR code with your authenticator app:</p>
+        <img src="data:image/png;base64,{{ qr_code_img }}" alt="QR Code">
+        <p class="secret-key">Or enter this secret key manually: <strong>{{ secret_key }}</strong></p>
+        <a href="{{ url_for('verify_2fa', account_name=account_name) }}" class="redirect-link">Go to Verify OTP</a>
+    </div>
+</body>
+
+</html>

@@ -1,9 +1,12 @@
-# Import necessary libraries
-from flask import Flask, request, render_template, redirect, url_for, jsonify, flash
+from flask import Flask, request, render_template, redirect, url_for, jsonify, flash, session
 import pyotp
 import sqlite3
 from two_factor_auth import TwoFactorAuth
 from werkzeug.security import generate_password_hash, check_password_hash
+import qrcode
+from PIL import Image
+import io
+import base64
 
 # Initialize Flask app
 app = Flask(__name__, template_folder='templates')
@@ -46,7 +49,7 @@ def signup():
     try:
         c.execute('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', (username, email, password))
         conn.commit()
-        flash('Signup successful!', 'success')
+        
     except sqlite3.IntegrityError:
         flash('Username or email already exists!', 'error')
     finally:
@@ -66,6 +69,9 @@ def login():
     conn.close()
 
     if user and check_password_hash(user[3], password):
+        session['user_id'] = user[0]
+        session['username'] = user[1]
+
         if not user[4]:  # Check if the user has a secret key (2FA enabled)
             return redirect(url_for('setup_2fa', account_name=username))
         else:
@@ -85,7 +91,21 @@ def setup_2fa(account_name):
     conn.commit()
     conn.close()
 
-    return render_template("setup_2fa.html", qr_code_url=qr_code_url, secret_key=secret_key)
+    # Generate QR code image as a base64 string
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(qr_code_url)
+    qr.make(fit=True)
+    img = qr.make_image(fill='black', back_color='white')
+    buffer = io.BytesIO()
+    img.save(buffer, format="PNG")
+    qr_code_img = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    return render_template("setup_2fa.html", account_name=account_name, qr_code_img=qr_code_img, secret_key=secret_key)
 
 @app.route("/verify_2fa/<account_name>", methods=["GET", "POST"])
 def verify_2fa(account_name):
@@ -100,7 +120,7 @@ def verify_2fa(account_name):
 
         if user and tfa.verify_otp(user[0], otp):
             flash('Login successful!', 'success')
-            return redirect(url_for('index'))
+           
         else:
             flash('Invalid OTP', 'error')
 
