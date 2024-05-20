@@ -1,6 +1,4 @@
-# Projekti 3 Siguria ne Internet 
-
-# 2FA Authentication Project
+# Projekti 3 Siguria ne Internet - 2FA Authentication Project
 
 ## Overview
 
