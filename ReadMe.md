@@ -27,7 +27,7 @@ This project implements a basic web application with Two-Factor Authentication (
 
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/yourusername/2fa-authentication.git
+   git clone https://github.com/reis03/Projekti_3_Siguria_ne_Internet.git
    cd 2fa-authentication
 
 Run the code
